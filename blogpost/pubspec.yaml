@@ -1,7 +1,7 @@
 name: blogpost
 description: "Assesment for Blog Post. Web Application"
 
-version: 1.0.0+1
+version: 1.0.3
 
 environment:
   sdk: ^3.5.0
