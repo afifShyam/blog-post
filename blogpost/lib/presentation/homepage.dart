@@ -274,7 +274,6 @@ class Homepage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                // Dispatch UpdatePost event
                 context.read<ListPostBloc>().add(
                       UpdatePost(
                         postId: post.id,
