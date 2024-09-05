@@ -37,6 +37,14 @@ class AppRouter {
           return const CreatePostPage();
         },
       ),
+      GoRoute(
+        path: '/user',
+        builder: (context, state) {
+          return UserTablePage(
+            users: context.read<UserBloc>().state.user,
+          );
+        },
+      ),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,

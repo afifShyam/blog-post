@@ -1,5 +1,5 @@
 import 'package:blogpost/application/index.dart';
-import 'package:blogpost/domain/model/index.dart';
+
 import 'package:blogpost/presentation/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
