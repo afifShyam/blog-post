@@ -1,5 +1,5 @@
 import 'package:blogpost/application/index.dart';
-
+import 'package:blogpost/domain/model/index.dart';
 import 'package:blogpost/presentation/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,19 +16,52 @@ class _CreatePostPageState extends State<CreatePostPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _bodyController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  int? _userId; // To store the found userId
 
   void _submitPost() {
     if (_formKey.currentState!.validate()) {
       final title = _titleController.text;
       final body = _bodyController.text;
+      final email = _emailController.text;
 
-      context.read<ListPostBloc>().add(
-            SentPost(
-              title: title,
-              body: body,
-              userId: 1,
-            ),
-          );
+      // Check if userId is found
+      if (_userId != null) {
+        context.read<ListPostBloc>().add(
+              SentPost(
+                title: title,
+                body: body,
+                userId: _userId!,
+              ),
+            );
+      } else {
+        ToastService.showErrorToast(
+          context,
+          isClosable: true,
+          message: "Email not found. Please check and try again.",
+        );
+      }
+    }
+  }
+
+  void _findUserByEmail(String email) {
+    final users = context.read<UserBloc>().state.user;
+
+    final user = users.firstWhere(
+      (user) => user.email == email,
+      orElse: () => UserModel.initial(),
+    );
+
+    setState(() {
+      _userId = user.id;
+    });
+
+    if (user == null) {
+      ToastService.showErrorToast(
+        context,
+        isClosable: true,
+        message: "User not found for this email",
+      );
     }
   }
 
@@ -44,6 +77,43 @@ class _CreatePostPageState extends State<CreatePostPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Text(
+                  'Enter Email',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    labelText: 'User Email',
+                    hintText: 'Enter the email of the user',
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.deepPurple),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an email';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    _findUserByEmail(value);
+                  },
+                ),
+                const SizedBox(height: 20),
                 const Text(
                   'Enter Title',
                   style: TextStyle(
@@ -124,13 +194,15 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
                       _titleController.clear();
                       _bodyController.clear();
+                      _emailController.clear();
+                      _userId = null; // Reset the userId
                     }
 
                     if (state.postStatus == PostStatus.error) {
                       ToastService.showErrorToast(
                         context,
                         isClosable: true,
-                        message: "Getting Error try back Later",
+                        message: "Error occurred, try again later.",
                       );
                     }
                   },

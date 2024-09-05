@@ -9,50 +9,88 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const Homepage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const Homepage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            // Fade transition
+            var tween = Tween(begin: 0.0, end: 1.0);
+            final opacityAnimation = animation.drive(tween);
+            return FadeTransition(opacity: opacityAnimation, child: child);
+          },
+        ),
       ),
       GoRoute(
         path: '/specific_post/:id/:username',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           dynamic id = state.pathParameters['id'] ?? 0;
           dynamic username = state.pathParameters['username'] ?? 0;
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider<ListPostBloc>(
-                create: (_) => ListPostBloc()
-                  ..add(GetSpecificPost(id: int.parse(id)))
-                  ..add(GetSpecificComment(postId: int.parse(id))),
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<ListPostBloc>(
+                  create: (_) => ListPostBloc()
+                    ..add(GetSpecificPost(id: int.parse(id)))
+                    ..add(GetSpecificComment(postId: int.parse(id))),
+                ),
+              ],
+              child: SpecificPost(
+                id: id,
+                username: username,
               ),
-            ],
-            child: SpecificPost(
-              id: id,
-              username: username,
             ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var tween = Tween(begin: 0.0, end: 1.0);
+              final opacityAnimation = animation.drive(tween);
+              return FadeTransition(opacity: opacityAnimation, child: child);
+            },
           );
         },
       ),
       GoRoute(
         path: '/create_post',
-        builder: (context, state) {
-          return const CreatePostPage();
-        },
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const CreatePostPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = Tween(begin: 0.0, end: 1.0);
+            final opacityAnimation = animation.drive(tween);
+            return FadeTransition(opacity: opacityAnimation, child: child);
+          },
+        ),
       ),
       GoRoute(
         path: '/user',
-        builder: (context, state) {
-          return UserTablePage(
-            users: context.read<UserBloc>().state.user,
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: UserTablePage(
+              users: context.read<UserBloc>().state.user,
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var tween = Tween(begin: 0.0, end: 1.0);
+              final opacityAnimation = animation.drive(tween);
+              return FadeTransition(opacity: opacityAnimation, child: child);
+            },
           );
         },
       ),
     ],
-    errorPageBuilder: (context, state) => MaterialPage(
+    errorPageBuilder: (context, state) => CustomTransitionPage(
       key: state.pageKey,
       child: Scaffold(
         body: Center(
           child: Text(state.error.toString()),
         ),
       ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var tween = Tween(begin: 0.0, end: 1.0);
+        final opacityAnimation = animation.drive(tween);
+        return FadeTransition(opacity: opacityAnimation, child: child);
+      },
     ),
   );
 }

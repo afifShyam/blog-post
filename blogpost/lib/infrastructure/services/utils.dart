@@ -19,7 +19,7 @@ MouseRegion buildHoverButton(
     child: AnimatedDefaultTextStyle(
       duration: const Duration(milliseconds: 200),
       style: TextStyle(
-        color: Colors.black,
+        color: Colors.white,
         fontSize: isHovered ? 18 : 16,
         fontWeight: FontWeight.w600,
       ),
@@ -27,7 +27,7 @@ MouseRegion buildHoverButton(
         onPressed: onTap,
         child: Text(label,
             style: TextStyle(
-              color: isHovered ? Colors.red : Colors.black,
+              color: isHovered ? Colors.red : Colors.white,
               fontSize: isHovered ? 20 : 16,
               fontWeight: FontWeight.w600,
             )),

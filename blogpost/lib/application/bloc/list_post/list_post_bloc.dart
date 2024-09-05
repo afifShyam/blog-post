@@ -46,7 +46,7 @@ class ListPostBloc extends Bloc<ListPostEvent, ListPostState> {
         payload: FormData.fromMap({
           'title': event.title,
           'body': event.body,
-          'userId': 1,
+          'userId': event.userId,
         }),
       );
       emit(
@@ -57,7 +57,10 @@ class ListPostBloc extends Bloc<ListPostEvent, ListPostState> {
       add(
         PostDummyData(
           dummyData: PostModel(
-              userId: 1, id: id, title: event.title, body: event.body),
+              userId: event.userId,
+              id: id,
+              title: event.title,
+              body: event.body),
         ),
       );
       emit(
