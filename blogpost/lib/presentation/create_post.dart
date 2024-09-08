@@ -23,7 +23,6 @@ class _CreatePostPageState extends State<CreatePostPage> {
     if (_formKey.currentState!.validate()) {
       final title = _titleController.text;
       final body = _bodyController.text;
-      final email = _emailController.text;
 
       // Check if userId is found
       if (_userId != null) {
@@ -56,7 +55,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
       _userId = user.id;
     });
 
-    if (user == null) {
+    if (user == UserModel.initial()) {
       ToastService.showErrorToast(
         context,
         isClosable: true,

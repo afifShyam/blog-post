@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:blogpost/application/index.dart';
 import 'package:blogpost/domain/model/index.dart';
 import 'package:blogpost/infrastructure/index.dart';
@@ -22,6 +21,9 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isMobile = screenWidth < 650;
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: const CustomAppBar(),
@@ -65,13 +67,18 @@ class _HomepageState extends State<Homepage> {
                   }
 
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40.w),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 10.w : 40.w,
+                    ),
                     child: GridView.builder(
                       shrinkWrap: true,
-                      padding: EdgeInsets.only(top: 30.h, bottom: 30.h),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(
+                        top: 30.h,
+                        bottom: 30.h,
+                      ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: isMobile ? 2 : 3,
                         mainAxisExtent: 350,
                         crossAxisSpacing: 20,
                         mainAxisSpacing: 20,
@@ -81,6 +88,7 @@ class _HomepageState extends State<Homepage> {
                         final post = filteredPosts[index];
 
                         return Container(
+                          width: isMobile ? 100 : null,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15),
@@ -95,15 +103,17 @@ class _HomepageState extends State<Homepage> {
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 20.w, vertical: 24.h),
+                              horizontal: 20.w,
+                              vertical: 24.h,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
                                   post.title,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.black87,
-                                    fontSize: 22,
+                                    fontSize: isMobile ? 12 : 22,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Merriweather',
                                   ),
@@ -113,9 +123,9 @@ class _HomepageState extends State<Homepage> {
                                 Expanded(
                                   child: Text(
                                     removeNewLine(post.body),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.black54,
-                                      fontSize: 16,
+                                      fontSize: isMobile ? 13 : 16,
                                       height: 1.5,
                                       fontFamily: 'OpenSans',
                                     ),
@@ -141,7 +151,7 @@ class _HomepageState extends State<Homepage> {
                                           'Posted By: ${user.username}',
                                           style: TextStyle(
                                             color: Colors.green[700],
-                                            fontSize: 14,
+                                            fontSize: isMobile ? 12 : 14,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -168,22 +178,24 @@ class _HomepageState extends State<Homepage> {
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.blueAccent,
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w,
+                                            horizontal: isMobile ? 8.w : 10.w,
                                             vertical: 12.h,
                                           ),
+                                          minimumSize: Size(
+                                              isMobile ? 10.w : 70.w, 40.h),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
                                         ),
-                                        child: const Text(
+                                        child: Text(
                                           'Read More',
                                           style: TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                              color: Colors.white,
+                                              fontSize: !isMobile ? 10 : 9.sp),
                                         ),
                                       ),
-                                      SizedBox(width: 10.w),
+                                      SizedBox(width: 8.w),
                                       ElevatedButton(
                                         onPressed: () {
                                           _showDeleteConfirmationDialog(
@@ -192,22 +204,25 @@ class _HomepageState extends State<Homepage> {
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.redAccent,
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w,
+                                            horizontal: isMobile ? 8.w : 10.w,
                                             vertical: 12.h,
                                           ),
+                                          minimumSize: Size(
+                                              isMobile ? 10.w : 70.w, 40.h),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
                                         ),
-                                        child: const Text(
+                                        child: Text(
                                           'Delete',
                                           style: TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                              color: Colors.white,
+                                              fontSize:
+                                                  !isMobile ? 10.sp : 9.sp),
                                         ),
                                       ),
-                                      SizedBox(width: 10.w),
+                                      SizedBox(width: 8.w),
                                       ElevatedButton(
                                         onPressed: () {
                                           _showUpdatePostDialog(context, post);
@@ -215,24 +230,27 @@ class _HomepageState extends State<Homepage> {
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.orangeAccent,
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: 16.w,
+                                            horizontal: isMobile ? 8.w : 10.w,
                                             vertical: 12.h,
                                           ),
+                                          minimumSize: Size(
+                                              isMobile ? 10.w : 70.w, 40.h),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
                                         ),
-                                        child: const Text(
+                                        child: Text(
                                           'Update',
                                           style: TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                              color: Colors.white,
+                                              fontSize:
+                                                  !isMobile ? 10.sp : 9.sp),
                                         ),
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),

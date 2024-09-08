@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:blogpost/application/index.dart';
 import 'package:blogpost/infrastructure/index.dart';
 import 'package:flutter/material.dart';
@@ -12,16 +14,32 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.black,
       elevation: 2,
-      title: const Text(
-        'Blog Post Lists',
-        style: TextStyle(
-          color: Colors.blueAccent,
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Merriweather',
+      title: const Align(
+        alignment: Alignment.topLeft,
+        child: Text(
+          'BPL',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Merriweather',
+            color: Colors.white,
+            // foreground: Paint()
+            //   ..shader = ui.Gradient.linear(
+            //     const Offset(20, 190),
+            //     const Offset(80, 9),
+            //     <Color>[
+            //       Colors.blue,
+            //       Colors.red,
+            //     ],
+            //     <double>[
+            //       0,
+            //       0,
+            //     ],
+            //   ),
+          ),
         ),
       ),
-      centerTitle: true,
+      // centerTitle: true,
       actions: [
         Padding(
           padding: const EdgeInsets.only(

@@ -1,6 +1,7 @@
 import 'package:blogpost/presentation/index.dart';
 import 'package:flutter/material.dart';
 import 'package:blogpost/domain/model/index.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UserTablePage extends StatefulWidget {
   final List<UserModel> users;
@@ -44,17 +45,18 @@ class _UserTablePageState extends State<UserTablePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 650;
+
     return Scaffold(
       appBar: const CustomAppBar(),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(isMobile ? 8.0 : 16.0),
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(isMobile ? 8.0 : 16.0),
                 child: Row(
                   children: [
                     const Text(
@@ -67,9 +69,9 @@ class _UserTablePageState extends State<UserTablePage> {
                     ),
                     const Spacer(),
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: EdgeInsets.all(isMobile ? 8.0 : 16.0),
                       child: SizedBox(
-                        width: 200,
+                        width: isMobile ? 150.w : 200.w,
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
@@ -93,43 +95,47 @@ class _UserTablePageState extends State<UserTablePage> {
                   ],
                 ),
               ),
-              DataTable(
-                headingRowColor: WidgetStateColor.resolveWith(
-                  (states) => Colors.grey.shade200,
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  headingRowColor: WidgetStateColor.resolveWith(
+                    (states) => Colors.grey.shade200,
+                  ),
+                  dataRowColor: WidgetStateColor.resolveWith(
+                    (states) => Colors.white,
+                  ),
+                  dividerThickness: 0.5,
+                  columnSpacing: isMobile ? 8 : 16,
+                  horizontalMargin: isMobile ? 8 : 12,
+                  headingTextStyle: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  dataTextStyle: const TextStyle(
+                    color: Colors.black87,
+                  ),
+                  columns: [
+                    if (!isMobile) const DataColumn(label: Text('ID')),
+                    const DataColumn(label: Text('Name')),
+                    const DataColumn(label: Text('Username')),
+                    const DataColumn(label: Text('Email')),
+                    if (!isMobile) const DataColumn(label: Text('Phone')),
+                    if (!isMobile) const DataColumn(label: Text('Website')),
+                    const DataColumn(label: Text('Company Name')),
+                  ],
+                  rows: _filteredUsers.map((user) {
+                    return DataRow(cells: [
+                      if (!isMobile)
+                        DataCell(SelectableText(user.id.toString())),
+                      DataCell(SelectableText(user.name)),
+                      DataCell(SelectableText(user.username)),
+                      DataCell(SelectableText(user.email)),
+                      if (!isMobile) DataCell(SelectableText(user.phone)),
+                      if (!isMobile) DataCell(SelectableText(user.website)),
+                      DataCell(SelectableText(user.company.name)), //
+                    ]);
+                  }).toList(),
                 ),
-                dataRowColor: WidgetStateColor.resolveWith(
-                  (states) => Colors.white,
-                ),
-                dividerThickness: 0.5,
-                columnSpacing: 16,
-                horizontalMargin: 12,
-                headingTextStyle: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-                dataTextStyle: const TextStyle(
-                  color: Colors.black87,
-                ),
-                columns: const [
-                  DataColumn(label: Text('ID')),
-                  DataColumn(label: Text('Name')),
-                  DataColumn(label: Text('Username')),
-                  DataColumn(label: Text('Email')),
-                  DataColumn(label: Text('Phone')),
-                  DataColumn(label: Text('Website')),
-                  DataColumn(label: Text('Company Name')),
-                ],
-                rows: _filteredUsers.map((user) {
-                  return DataRow(cells: [
-                    DataCell(Text(user.id.toString())),
-                    DataCell(Text(user.name)),
-                    DataCell(Text(user.username)),
-                    DataCell(Text(user.email)),
-                    DataCell(Text(user.phone)),
-                    DataCell(Text(user.website)),
-                    DataCell(Text(user.company.name)),
-                  ]);
-                }).toList(),
               ),
             ],
           ),

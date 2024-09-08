@@ -7,13 +7,13 @@ environment:
   sdk: ^3.5.0
 
 dependencies:
-  bloc: ^8.1.4
+  bloc: ^7.0.0
   build_runner: ^2.4.12
   cupertino_icons: ^1.0.8
   dio: ^5.7.0
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.6
+  flutter_bloc: ^7.0.0
   flutter_screenutil: ^5.9.3
   freezed: ^2.5.7
   freezed_annotation: ^2.4.4
