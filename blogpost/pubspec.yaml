@@ -21,6 +21,7 @@ dependencies:
   json_annotation: ^4.9.0
   json_serializable: ^6.8.0
   pretty_dio_logger: ^1.4.0
+  sleek_circular_slider: ^2.0.1
   toasty_box: ^1.0.4
 
 dev_dependencies:

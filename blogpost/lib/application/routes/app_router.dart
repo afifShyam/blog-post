@@ -1,3 +1,4 @@
+import 'package:blogpost/application/bloc/slider/slider_cubit.dart';
 import 'package:blogpost/application/index.dart';
 import 'package:blogpost/presentation/index.dart';
 import 'package:flutter/material.dart';
@@ -66,8 +67,11 @@ class AppRouter {
         pageBuilder: (context, state) {
           return CustomTransitionPage(
             key: state.pageKey,
-            child: UserTablePage(
-              users: context.read<UserBloc>().state.user,
+            child: BlocProvider(
+              create: (context) => SliderCubit(),
+              child: const UserTablePage(
+                  // users: context.read<UserBloc>().state.user,
+                  ),
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
