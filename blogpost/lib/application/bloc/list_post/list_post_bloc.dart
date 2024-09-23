@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:blogpost/domain/model/index.dart';
 import 'package:blogpost/infrastructure/index.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'list_post_state.dart';
@@ -42,7 +43,7 @@ class ListPostBloc extends Bloc<ListPostEvent, ListPostState> {
     try {
       emit(state.copyWith(listPostStatus: ListPostStatus.loading));
 
-      final id = await PostRepo().sentPost(
+      await PostRepo().sentPost(
         payload: FormData.fromMap({
           'title': event.title,
           'body': event.body,
@@ -54,13 +55,17 @@ class ListPostBloc extends Bloc<ListPostEvent, ListPostState> {
           listPostStatus: ListPostStatus.completed,
         ),
       );
+
+      final id = DateTime.now().millisecondsSinceEpoch;
+
       add(
         PostDummyData(
           dummyData: PostModel(
-              userId: event.userId,
-              id: id,
-              title: event.title,
-              body: event.body),
+            userId: event.userId,
+            id: id.hashCode,
+            title: event.title,
+            body: event.body,
+          ),
         ),
       );
       emit(
